@@ -3,3 +3,6 @@ flask
 waitress
 pillow
 roboflow
+fastapi
+uvicorn
+python-multipart
