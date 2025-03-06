@@ -22,9 +22,5 @@ faiss-cpu
 cohere
 google-generativeai
 openai
-smtplib
-email
-
-fastapi
-uvicorn
-python-multipart
+llama-index
+llama-index-experimental

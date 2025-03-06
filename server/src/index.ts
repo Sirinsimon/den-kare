@@ -6,6 +6,7 @@ import session from 'express-session';
 import passport from 'passport';
 import cookieparser from 'cookie-parser';
 import cors from 'cors';
+import  "./database/seed"
 
 const PORT = 8000;
 const app: Application = express();
