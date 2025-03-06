@@ -24,3 +24,7 @@ google-generativeai
 openai
 smtplib
 email
+
+fastapi
+uvicorn
+python-multipart
