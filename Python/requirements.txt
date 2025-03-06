@@ -24,3 +24,5 @@ google-generativeai
 openai
 llama-index
 llama-index-experimental
+langchain_together
+google

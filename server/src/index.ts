@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import { zodMiddleWare } from './middlewares/zod.middleware';
 import { client } from './database/db';
 import doctorRouter from './routes/doctor.route';
+import analyzeRouter from './routes/analayze.route'
 import session from 'express-session';
 import passport from 'passport';
 import cookieparser from 'cookie-parser';
@@ -49,6 +50,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/doctor', doctorRouter);
+app.use('/analyze', analyzeRouter);
 
 //Middlewares
 app.use(zodMiddleWare);

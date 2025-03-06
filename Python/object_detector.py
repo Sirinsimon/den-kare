@@ -169,7 +169,7 @@ together = ChatTogether(
         model="google/gemma-2-27b-it",
     )
 import PIL.Image
-from google import genai
+import google.generativeai as genai
 from typing import List
 scan_memory: List[dict] = []
 
