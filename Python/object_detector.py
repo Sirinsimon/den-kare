@@ -61,7 +61,7 @@ def detect_objects_on_image(buf):
 
 
 #rag---------------------------------------------------------------------------------------------------
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends,Body
 from pydantic import BaseModel
 from langchain.agents import AgentType
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -162,20 +162,78 @@ def Medical_Old_Reports(query:Medical_Old_report):
 
 
 #--------------------------------------------------------------Scan --------------------------------------------------------------------------------------
-
+from langchain_together import ChatTogether
+api_key="9ff4442add386aaadcc7bf2df155391a268d690b1c0cf4b28992a86483bfa396"
+together = ChatTogether(
+        api_key=api_key,
+        model="google/gemma-2-27b-it",
+    )
 import PIL.Image
+from google import genai
+from typing import List
+scan_memory: List[dict] = []
 
-class Images(BaseModel):
-    image_link:str
+from fastapi import FastAPI, UploadFile, File, Query
 @app.post("/scan")
-def Scan(image:Images):
-    image_link=image.image_link
-    print(image_link)
-    image = PIL.Image.open(image_link)
+async def scan(image_file: UploadFile = File(...)):
+    image_bytes = await image_file.read()
+    image = PIL.Image.open(io.BytesIO(image_bytes))
     client = genai.Client(api_key="AIzaSyCyB9rgwo4e0WoZS-CIulrcs_fzg2IEuwc")
     response = client.models.generate_content(
         model="gemini-2.0-flash",
-        contents=["Analyze the provided dental X-ray/intraoral image and generate a detailed diagnosis report. Identify cavities, gum disease, misalignment, impacted teeth, bone loss, or any other abnormalities. Provide a structured report with findings, potential causes, and recommended treatments.", image])
-    return{"result":response.text}
+        contents=["Analyze the provided dental X-ray/intraoral image and generate a detailed diagnosis report. Identify cavities, gum disease, misalignment, impacted teeth, bone loss, or any other abnormalities. Provide a structured report with findings, potential causes, No need to recomend treatment.", image])
+    diagnosis_report = response.text if response else "No response received."
+    scan_memory.append({"Analysis":"The Analysis of the Image", "diagnosis": diagnosis_report})
+    print(diagnosis_report)
+    return {"diagnosis": diagnosis_report}
+
+# Query past diagnoses
+from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_core.chat_history import BaseChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain.prompts import ChatPromptTemplate,MessagesPlaceholder
+store = {}
+
+
+def get_session_history(session_id: str) -> BaseChatMessageHistory:
+    if session_id not in store:
+        store[session_id] = ChatMessageHistory()
+    return store[session_id]
+
+config={"configurable": {"session_id": "first_chat"}}
+@app.post("/query")
+async def query_diagnosis(query: str = Body(..., embed=True)):
+    
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", "you should give answer based on the question"),
+            MessagesPlaceholder(variable_name="history"),
+            ("human", "{input}")
+        ]
+    )
+    
+    chain = prompt | together
+    history = get_session_history("first_chat")
+    history.add_message({"role": "assistant", "content": scan_memory[0]["diagnosis"]})
+    
+    with_message_history = RunnableWithMessageHistory(
+        chain,
+        get_session_history,
+        input_messages_key="input",
+        history_messages_key="history",
+    )
+    
+    result = with_message_history.invoke({"input": query}, config=config)
+    history.add_message({"role":"user","content":query})
+    history.add_message({"role":"assistant","content":result.content})
+    print(store)
+    return {"result": result}
+
+@app.post("/clear_memory")
+async def clear_memory():
+    """Clears the memory when a new chat session begins."""
+    scan_memory.clear()
+    return {"message": "Memory cleared successfully."}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5000)

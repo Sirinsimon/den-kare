@@ -18,6 +18,7 @@ export default function Scan() {
                 method : "POST",
                 body: data,
             })
+            console.log(response)
         } catch (error) {
             console.error("Error uploading image:", error)
         }
