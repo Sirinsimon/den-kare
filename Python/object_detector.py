@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can specify specific origins like ["http://localhost:3000"]
+    allow_origins=["http://localhost:8080"],  # You can specify specific origins like ["http://localhost:3000"]
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods like POST, GET, etc.
     allow_headers=["*"],  # Allows all headers
