@@ -271,23 +271,83 @@ async def clear_memory():
     return {"message": "Memory cleared successfully."}
 
 treatments=list()
+description_treatment=list()
 class Datas(BaseModel):
     data:str
     
 class FMstate(BaseModel):
-    solutions: List[str] = Field(default_factory=list, description="List of treatment solutions and its large description")
+    solutions: List[str] = Field(default_factory=list, description="List of treatment solutions ")
 @app.get("/treatments")
 def TreatMent():
-    global treatments
-    prompt=f"Based on the Given Report {digonosis_report_main} You should Provide mutltiple treatment Solutions with larage explainations"
+    global treatments,description_treatment
+    prompt=f"Based on the Given Report {digonosis_report_main} You should Provide mutltiple treatment Solutions "
     final_llm=groq.with_structured_output(FMstate)
     result=final_llm.invoke(prompt)
     treatments=result
-    print(result.solutions[0])
-    return {"result":result.solutions}
+    new_res=[]
+    for results in range(len(result.solutions)):
+        prompt=f"Based on the medical treatment please provide 50 words description treatment:{result.solutions[results]}"
+        text=groq.invoke(prompt)
+        new_res.append(text.content)
+    description_treatment=new_res
+    return {"title":result.solutions,"content":new_res}
 
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import simpleSplit
+from PIL import Image
+
+def create_pdf(output_path, body_text, image_path):
+    c = canvas.Canvas(output_path, pagesize=letter)
+    width, height = letter
+    margin_x, margin_y = 50, 50  # Margins
+
+    # Title
+    c.setFont("Helvetica-Bold", 24)
+    c.drawCentredString(width / 2, height - 80, "REPORTS")
+
+    # Body Text Wrapping & Pagination
+    c.setFont("Helvetica", 12)
+    text_y = height - 130  # Start below the title
+    max_width = width - 2 * margin_x
+    max_lines_per_page = int((height - 2 * margin_y) / 20)  # Approximate line count per page
+    lines = simpleSplit(body_text, "Helvetica", 12, max_width)  # Wrap text properly
+    page_count = 1
+
+    for i, line in enumerate(lines):
+        if text_y < margin_y:  # Start a new page if space runs out
+            c.showPage()
+            c.setFont("Helvetica", 12)
+            text_y = height - margin_y
+            page_count += 1
+        c.drawString(margin_x, text_y, line)
+        text_y -= 20  # Move down for the next line
+
+    # Insert Image on Last Page
+    img = Image.open(image_path)
+    img_width, img_height = img.size
+
+    # Scale Image to Fit the Page Width (if needed)
+    if img_width > max_width:
+        scale = max_width / img_width
+        img_width = max_width
+        img_height *= scale
+
+    # Move to last page and insert the image
+    if page_count > 1:
+        c.showPage()
+
+    c.drawImage(image_path, (width - img_width) / 2, margin_y, width=img_width, height=img_height)
+
+    c.save()
+    print(f"PDF saved at: {output_path}")
+
+# Flask/FastAPI Route
 @app.get("/final_report")
 def Finalize():
-    
+    body1 = digonosis_report_main + str(treatments.solutions) + str(description_treatment)
+    output_path1 = "./Pdfs/report1.pdf"
+    create_pdf(output_path1, body1, "perio.png")
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5000)

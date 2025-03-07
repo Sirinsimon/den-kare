@@ -35,10 +35,3 @@ def create_pdf(output_path, body_text, image_path):
     print(f"PDF saved at: {output_path}")
 
 # Usage
-output_path = "report.pdf"
-body_text = """This is the body of the report.
-It contains multiple lines of text.
-You can add more details here."""
-image_path = "perio.png"  # Replace with actual image path
-
-create_pdf(output_path, body_text, image_path)
