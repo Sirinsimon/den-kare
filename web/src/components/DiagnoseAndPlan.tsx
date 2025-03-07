@@ -1,9 +1,10 @@
-
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, FileText } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import { toast } from "sonner";
+import DiagnosisEditor from "@/components/DiagnosisEditor";
 
 const DiagnoseAndPlan = ({ onComplete, onBack }: { onComplete: () => void; onBack: () => void }) => {
     const location = useLocation();
@@ -34,10 +35,6 @@ const DiagnoseAndPlan = ({ onComplete, onBack }: { onComplete: () => void; onBac
         let res = await data.json()
     }
 
-    useEffect(()=>{
-            generateReport()
-    },[])
-
     const [report, setReport] = useState(`
     Patient Diagnosis Report
 
@@ -60,6 +57,47 @@ const DiagnoseAndPlan = ({ onComplete, onBack }: { onComplete: () => void; onBac
     Recommended treatment plan will be provided in the final phase.
   `);
 
+    const [treatmentPlan, setTreatmentPlan] = useState(`
+    Treatment Plan
+    
+    For the diagnosed early-stage macular degeneration, the following treatment plan is recommended:
+    
+    1. AREDS2 formula supplements (daily)
+    2. Smoking cessation (if applicable)
+    3. Dietary modifications:
+       - Increase intake of leafy green vegetables
+       - Include fish high in omega-3 fatty acids twice weekly
+       - Limit processed foods high in saturated fats
+    
+    4. UV protection with quality sunglasses when outdoors
+    5. Regular monitoring:
+       - OCT imaging every 6 months
+       - Visual acuity testing every 3 months
+    
+    6. Amsler grid home monitoring (daily)
+    
+    Early intervention with these measures has been shown to slow progression 
+    and maintain visual function longer in patients with early AMD.
+  `);
+
+    const [activeView, setActiveView] = useState("diagnosis");
+
+    useEffect(()=>{
+            generateReport()
+    },[])
+
+    const handleSaveReport = () => {
+        toast.success("Diagnosis report saved", {
+            description: "Your changes have been applied"
+        });
+    };
+
+    const handleSaveTreatmentPlan = () => {
+        toast.success("Treatment plan saved", {
+            description: "Your changes have been applied"
+        });
+    };
+
     return (
         <div className="workflow-container animate-fade-in space-y-6">
             <div className="text-center space-y-2">
@@ -68,7 +106,7 @@ const DiagnoseAndPlan = ({ onComplete, onBack }: { onComplete: () => void; onBac
                 </div>
                 <h2 className="text-2xl font-light tracking-tight">Diagnose & Plan</h2>
                 <p className="text-neutral-400 max-w-md mx-auto">
-                    Review the detailed diagnosis report based on the analyzed data.
+                    Review and edit the diagnosis report and treatment plan.
                 </p>
             </div>
 
@@ -79,14 +117,14 @@ const DiagnoseAndPlan = ({ onComplete, onBack }: { onComplete: () => void; onBac
                 transition={{ duration: 0.5 }}
                 className="glass-panel rounded-lg p-6 min-h-[350px] max-w-3xl mx-auto"
             >
-                <div className="flex items-center mb-4">
-                    <FileText className="h-5 w-5 mr-2 text-progress-75" />
-                    <h3 className="text-md font-medium">Diagnosis Report</h3>
-                </div>
-
-                <div className="whitespace-pre-line text-neutral-300 leading-relaxed">
-                    {report}
-                </div>
+                {activeView === "diagnosis" &&
+                    <DiagnosisEditor
+                        title="Diagnosis Report"
+                        content={report}
+                        onChange={setReport}
+                        onSave={handleSaveReport}
+                    />
+                }
             </motion.div>
 
             <div className="flex justify-between items-center">
@@ -111,3 +149,4 @@ const DiagnoseAndPlan = ({ onComplete, onBack }: { onComplete: () => void; onBac
 };
 
 export default DiagnoseAndPlan;
+

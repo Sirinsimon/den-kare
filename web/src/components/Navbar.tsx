@@ -13,7 +13,7 @@ export default function Navbar({ user }: NavbarProps) {
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Menu className="h-5 w-5" />
-          <span className="font-semibold">MedDash</span>
+          <span className="font-semibold">Den-Kare</span>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm hidden md:inline-block">{user.name}</span>

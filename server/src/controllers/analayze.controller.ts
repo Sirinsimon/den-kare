@@ -37,7 +37,6 @@ async function getDetectionsFromAppointmentId(req: Request, res: Response, next:
     try {
         const { appointment_id } = result.data;
 
-        console.log(appointment_id)
         const detectionRecords = await db
             .select()
             .from(detections)
