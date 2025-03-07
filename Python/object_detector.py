@@ -194,8 +194,10 @@ class DiagnosisReport(BaseModel):
     detected: List[str]
 
 my_set=set()
+digonosis_report_main=""
 @app.post("/scan")
 async def scan(details:DiagnosisReport):
+    global digonosis_report_main
     for data in details.detected:
         my_set.add(data)
     print(str(my_set))
@@ -212,6 +214,7 @@ async def scan(details:DiagnosisReport):
         contents=["Analyze the provided dental X-ray/intraoral image and generate a detailed diagnosis report. Identify cavities, gum disease, misalignment, impacted teeth, bone loss, or any other abnormalities. Provide a structured report with findings, potential causes, No need to recomend treatment.", image])
             diagnosis_report = response.text if response else "No response received."
             print(diagnosis_report)
+            digonosis_report_main=diagnosis_report
             return {"result":diagnosis_report}
     else:
         print(f"Image for appointment {details.appointmentId} not found.")
@@ -267,5 +270,24 @@ async def clear_memory():
     scan_memory.clear()
     return {"message": "Memory cleared successfully."}
 
+treatments=list()
+class Datas(BaseModel):
+    data:str
+    
+class FMstate(BaseModel):
+    solutions: List[str] = Field(default_factory=list, description="List of treatment solutions and its large description")
+@app.get("/treatments")
+def TreatMent():
+    global treatments
+    prompt=f"Based on the Given Report {digonosis_report_main} You should Provide mutltiple treatment Solutions with larage explainations"
+    final_llm=groq.with_structured_output(FMstate)
+    result=final_llm.invoke(prompt)
+    treatments=result
+    print(result.solutions[0])
+    return {"result":result.solutions}
+
+@app.get("/final_report")
+def Finalize():
+    
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5000)
