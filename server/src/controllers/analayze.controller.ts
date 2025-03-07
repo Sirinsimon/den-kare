@@ -37,6 +37,7 @@ async function getDetectionsFromAppointmentId(req: Request, res: Response, next:
     try {
         const { appointment_id } = result.data;
 
+        console.log(appointment_id)
         const detectionRecords = await db
             .select()
             .from(detections)
@@ -46,7 +47,7 @@ async function getDetectionsFromAppointmentId(req: Request, res: Response, next:
             throw new CustomError(404, 'No detections found for this appointment ID');
         }
 
-        res.status(200).json(detectionRecords);
+        res.status(200).json(detectionRecords[0]);
     } catch (error) {
         console.log(error);
         next(new CustomError(500, 'Failed to retrieve detected data'));
