@@ -30,6 +30,8 @@ const DiagnoseAndPlan = ({ onComplete, onBack }: { onComplete: () => void; onBac
                 appointmentId:appointmentId
             }),
         })
+        console.log(data)
+        let res = await data.json()
     }
 
     useEffect(()=>{

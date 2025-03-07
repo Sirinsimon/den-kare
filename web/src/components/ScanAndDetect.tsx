@@ -61,7 +61,7 @@ const ScanAndDetect = ({ onComplete }: { onComplete: () => void }) => {
 
         setImage(file);
         const data = new FormData();
-        data.append("image_file", file, "image_file");
+        data.append("image_file", file);
 
         try {
             console.log(data)
