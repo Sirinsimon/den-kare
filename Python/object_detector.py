@@ -182,12 +182,10 @@ together = ChatTogether(
         model="google/gemma-2-27b-it",
     )
 import PIL.Image
-import google.generativeai as genai
 from typing import List
 scan_memory: List[dict] = []
 
 from fastapi import FastAPI, UploadFile, File, Query
-from google import genai
 class DiagnosisReport(BaseModel):
     appointmentId: str
     past_history: str
