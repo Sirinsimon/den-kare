@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { FileText, ArrowLeft, CheckCircle, Share2, Download, Mail, Users, Lock, Printer, Copy } from 'lucide-react';
 import { toast } from "sonner";
 import DiagnosisEditor from "@/components/DiagnosisEditor";
+import ReportsModal from "./ReportsModal";
+import AppointmentsCard from "./AppointmentsCard";
 
 
 const diagnosesData = [
@@ -36,8 +38,9 @@ const FinalizeAndShare = ({ onBack, onReset }: { onBack: () => void; onReset: ()
     const [isFinalizing, setIsFinalizing] = useState(false);
     const [isFinalized, setIsFinalized] = useState(false);
     const [selectedItem, setSelectedItem] = useState<{ id: string, title: string, content: string } | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const [editedContent, setEditedContent] = useState("");
-    const [treatmentPlans,setTreatmentPlans] = useState([])
+    const [treatmentPlans, setTreatmentPlans] = useState([])
 
     const fetchTreatmentPlans = async () => {
         const data = await fetch("http://localhost:5000/treatments")
@@ -45,13 +48,18 @@ const FinalizeAndShare = ({ onBack, onReset }: { onBack: () => void; onReset: ()
         setTreatmentPlans(res.result)
     }
 
+    const reports = [
+        { name: "Diagnosis report", type: "report.pdf" },
+        { name: "Prescription report", type: "report.pdf" },
+    ]
 
-    const handleFinalize = async() => {
+    const handleFinalize = async () => {
         setIsFinalizing(true);
         let data = await fetch(`http://localhost:5000/final_report?title=${selectedItem.title}`)
         let res = await data.json()
 
         console.log(res)
+        setIsModalOpen(true)
         setTimeout(() => {
             setIsFinalizing(false);
             setIsFinalized(true);
@@ -83,6 +91,7 @@ const FinalizeAndShare = ({ onBack, onReset }: { onBack: () => void; onReset: ()
                     Finalize the report and share it with healthcare team or patient.
                 </p>
             </div>
+            <ReportsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} reports={reports} />
 
             <div className="glass-panel p-4 space-y-4">
                 <div className="flex justify-between items-center">
