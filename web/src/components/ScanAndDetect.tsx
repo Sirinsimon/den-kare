@@ -62,10 +62,10 @@ const ScanAndDetect = ({ onComplete }: { onComplete: () => void }) => {
         setImage(file);
         const data = new FormData();
         data.append("image_file", file, "image_file");
-        data.append("appointmentId", appointmentId); // Send appointmentId in FormData
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/detect", {
+            console.log(data)
+            const response = await fetch(`http://127.0.0.1:5000/detect/${appointmentId}`, {
                 method: "POST",
                 body: data,
             });

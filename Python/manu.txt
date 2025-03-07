@@ -1,5 +1,67 @@
-              Wikis are powered by wiki software, also known as wiki engines. Being a form of content management system, these differ from other web-based systems such as blog software or static site generators in that the content is created without any defined owner or leader. Wikis have little inherent structure, allowing one to emerge according to the needs of the users.[1] Wiki engines usually allow content to be written using a lightweight markup language and sometimes edited with the help of a rich-text editor.[2] There are dozens of different wiki engines in use, both standalone and part of other software, such as bug tracking systems. Some wiki engines are free and open-source, whereas others are proprietary. Some permit control over different functions (levels of access); for example, editing rights may permit changing, adding, or removing material. Others may permit access without enforcing access control. Further rules may be imposed to organize content. In addition to hosting user-authored content, wikis allow those users to interact, hold discussions, and collaborate.[3]
+**Patient Dental Diagnosis Record**
 
-There are hundreds of thousands of wikis in use, both public and private, including wikis functioning as knowledge management resources, note-taking tools, community websites, and intranets. Ward Cunningham, the developer of the first wiki software, WikiWikiWeb, originally described wiki as "the simplest online database that could possibly work".[4] "Wiki" (pronounced [wiki][note 1]) is a Hawaiian word meaning "quick".[5][6][7]
+**Patient Information:**  
+- **Name:** Johnathan Roberts  
+- **Date of Birth:**  March 15, 1952  
+- **Age:** 72 years  
+- **Gender:** Male  
+- **Contact:** (555) 123-4567  
+- **Address:** 789 Elm Street, Springfield, IL 62704  
+- **Primary Dentist:** Dr. Emily Carter  
+- **Last Dental Visit:** September 20, 2023  
+- **Medical History:** Hypertension, Type 2 Diabetes, Osteoarthritis  
+- **Allergies:** Penicillin  
+- **Current Medications:** Metformin, Lisinopril, Ibuprofen (as needed)  
 
-The online encyclopedia project Wikipedia is the most popular wiki-based website, as well being one of the internet's most popular websites, having been ranked consistently as such since at least 2007.[8] Wikipedia is not a single wiki but rather a collection of hundreds of wikis, with each one pertaining to a specific language. The English-language Wikipedia has the largest collection of articles, standing at 6,962,571 as of March 2025.[9]
+**Previous Dental History:**  
+- **Last Dental X-ray:** January 10, 2022  
+- **Previous Treatments:** Multiple fillings, root canal treatment on tooth #14, extraction of tooth #19  
+- **Prosthetics:** Partial denture for lower left molars  
+- **Periodontal History:** Diagnosed with mild periodontal disease in 2021, managed with deep cleaning and improved oral hygiene routine  
+- **Caries Risk Assessment:** High (due to dry mouth from medication and diabetes)  
+
+**Current Diagnosis (September 20, 2023 Visit):**  
+1. **Tooth Decay:** 
+   - Moderate decay detected on tooth #12 (mesial surface)
+   - Early enamel demineralization on teeth #5 and #6
+   
+2. **Gingivitis:**  
+   - Inflammation and mild bleeding on probing in upper left quadrant  
+   - Mild gum recession noted on lower anteriors  
+   
+3. **Tooth Wear & Sensitivity:**  
+   - Mild attrition observed on molars due to grinding (bruxism)  
+   - Reports of sensitivity to cold foods and beverages  
+   
+4. **Periodontal Condition:**  
+   - Deep pockets (4-5mm) in posterior region suggest early periodontitis progression  
+   - Presence of calculus and plaque buildup in molar areas  
+   
+5. **Prosthetic Evaluation:**  
+   - Partial denture still functional but requires minor adjustments due to discomfort reported while chewing  
+   
+**Recommended Treatment Plan:**  
+- **Dental Fillings:** Composite resin restoration for tooth #12  
+- **Fluoride Treatment:** Application of fluoride varnish for enamel remineralization  
+- **Deep Cleaning (Scaling & Root Planing):** Recommended for periodontal pocket reduction  
+- **Night Guard:** Custom night guard suggested to prevent further bruxism damage  
+- **Denture Adjustment:** Minor refinements to improve fit and comfort  
+- **Follow-Up:** Re-evaluation in 6 months to monitor periodontal status and caries progression  
+
+**Oral Hygiene Instructions Provided:**  
+- Brush twice daily with fluoride toothpaste  
+- Floss once daily, especially focusing on interdental areas  
+- Use antimicrobial mouthwash (Chlorhexidine)  
+- Avoid sugary and acidic foods to reduce caries risk  
+- Stay hydrated to manage dry mouth symptoms  
+
+**Next Appointment Scheduled:** March 25, 2024  
+
+**Notes & Additional Observations:**  
+- Patient expressed concerns about persistent sensitivity; advised on desensitizing toothpaste and potential use of fluoride trays if symptoms persist.  
+- No signs of oral lesions or abnormalities in soft tissue exam.  
+
+**Dentist's Signature:**  
+Dr. Emily Carter  
+Springfield Dental Care  
+(555) 987-6543

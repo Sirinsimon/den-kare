@@ -22,9 +22,11 @@ async def root():
     """
     with open("templates/index.html") as file:
         return file.read()
-
-@app.post("/detect")
-async def detect(image_file: UploadFile = File(...)):
+from pydantic import BaseModel, Field
+from fastapi import FastAPI, UploadFile, File, Form,Request
+import os
+@app.post("/detect/{appointmentId}")
+async def detect(appointmentId: str, image_file: UploadFile = File(...)):
     """
     Handler of /detect POST endpoint.
     Receives uploaded file with a name "image_file", passes it
@@ -32,9 +34,16 @@ async def detect(image_file: UploadFile = File(...)):
     of bounding boxes.
     :return: a JSON array of objects bounding boxes in format [[x1,y1,x2,y2,object_type,probability],..]
     """
+    print(appointmentId)
     image_bytes = await image_file.read()
     buf = io.BytesIO(image_bytes)
     boxes = detect_objects_on_image(buf)
+    folder_path = "./uploads"  # Replace this with the actual folder path
+    os.makedirs(folder_path, exist_ok=True)  # Ensure the folder exists
+    image_path = os.path.join(folder_path, f"{appointmentId}.jpg")  # Save with appointmentid as filename
+    with open(image_path, "wb") as f:
+        f.write(image_bytes)
+    
     return {"boxes": boxes}
 
 def detect_objects_on_image(buf):
@@ -92,7 +101,7 @@ from langchain.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 import re
-from pydantic import BaseModel, Field
+
 from typing import Optional
 import smtplib
 import ssl
