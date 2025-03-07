@@ -160,7 +160,11 @@ def Medical_Old_Reports(query:Medical_Old_report):
     result=final_chain.invoke(query.query)
     return {"result": result}
 
-
+@app.post("/medical_report1")
+def data(data:Medical_Old_report):
+    return {"data":"hi"}
+    
+        
 #--------------------------------------------------------------Scan --------------------------------------------------------------------------------------
 from langchain_together import ChatTogether
 api_key="9ff4442add386aaadcc7bf2df155391a268d690b1c0cf4b28992a86483bfa396"

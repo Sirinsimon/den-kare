@@ -25,7 +25,7 @@ const ReviewAndAnnotate = ({ onComplete, onBack, }: { onComplete: () => void; on
             setNewMessage("");
 
             try {
-                const response = await fetch("http://localhost:5000/medical_report/", {
+                const response = await fetch("http://127.0.0.1:5000/medical_report", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -33,9 +33,10 @@ const ReviewAndAnnotate = ({ onComplete, onBack, }: { onComplete: () => void; on
                     credentials: "include",
                     body: JSON.stringify({ query: userMessage }),
                 });
-
+                console.log(response)
                 const data = await response.json();
-                setChatMessages(prev => [...prev, { text: data.reply, sender: "system" }]);
+                console.log(data)
+                setChatMessages(prev => [...prev, { text: data.result, sender: "system" }]);
             } catch (error) {
                 console.error("Error fetching response:", error);
             }
