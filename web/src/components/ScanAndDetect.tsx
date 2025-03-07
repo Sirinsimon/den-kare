@@ -26,8 +26,10 @@ const saveDetectionToDB = async (appointment_id: string, clinicId: string, detec
 
 const ScanAndDetect = ({ onComplete }: { onComplete: () => void }) => {
     const location = useLocation();
+
     const queryParams = new URLSearchParams(location.search);
     const appointmentId = queryParams.get("appointmentId");
+
     const clinicId = queryParams.get("clinicId");
     const [image, setImage] = useState<File | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -60,6 +62,7 @@ const ScanAndDetect = ({ onComplete }: { onComplete: () => void }) => {
         setImage(file);
         const data = new FormData();
         data.append("image_file", file, "image_file");
+        data.append("appointmentId", appointmentId); // Send appointmentId in FormData
 
         try {
             const response = await fetch("http://127.0.0.1:5000/detect", {
