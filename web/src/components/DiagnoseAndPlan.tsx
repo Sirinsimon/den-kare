@@ -24,8 +24,13 @@ const DiagnoseAndPlan = ({ onComplete, onBack }: { onComplete: () => void; onBac
 
     const generateReport = async () => {
         let result = await getDetectionResults()
+        console.log("manu")
+        console.log(result)
         let data = await fetch(`http://localhost:5000/scan`,{
             method:"POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body:JSON.stringify({
                 ...result,
                 appointmentId:appointmentId
@@ -33,6 +38,7 @@ const DiagnoseAndPlan = ({ onComplete, onBack }: { onComplete: () => void; onBac
         })
         console.log(data)
         let res = await data.json()
+        console.log(res.result)
     }
 
     const [report, setReport] = useState(`

@@ -187,18 +187,37 @@ from typing import List
 scan_memory: List[dict] = []
 
 from fastapi import FastAPI, UploadFile, File, Query
+from google import genai
+class DiagnosisReport(BaseModel):
+    appointmentId: str
+    past_history: str
+    detected: List[str]
+
+my_set=set()
 @app.post("/scan")
-async def scan(image_file: UploadFile = File(...)):
-    image_bytes = await image_file.read()
-    image = PIL.Image.open(io.BytesIO(image_bytes))
-    client = genai.Client(api_key="AIzaSyCyB9rgwo4e0WoZS-CIulrcs_fzg2IEuwc")
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
+async def scan(details:DiagnosisReport):
+    for data in details.detected:
+        my_set.add(data)
+    print(str(my_set))
+    folder_path = f"./uploads/{details.appointmentId}.jpg"
+    if os.path.exists(folder_path):
+        with open(folder_path, "rb") as image_file:
+            image_bytes = image_file.read()
+            image = Image.open(io.BytesIO(image_bytes))
+            client = genai.Client(api_key="AIzaSyCyB9rgwo4e0WoZS-CIulrcs_fzg2IEuwc")
+            prompt=f"Analyze the provided dental X-ray or intraoral image and generate a comprehensive diagnostic report. Identify and describe any detected conditions, such as cavities, gum disease, misalignment, impacted teeth, bone loss, or other abnormalities. Incorporate the patient's previous medical history into the analysis to provide a more contextualized assessment. Structure the report with clear findings, possible causes, and relevant observations. Avoid recommending treatment plans. Use the following data for reference:Detected Conditions: {str(my_set)} Previous User History: {details.past_history}"
+            print(prompt)
+            response = client.models.generate_content(
+            model="gemini-2.0-flash",
         contents=["Analyze the provided dental X-ray/intraoral image and generate a detailed diagnosis report. Identify cavities, gum disease, misalignment, impacted teeth, bone loss, or any other abnormalities. Provide a structured report with findings, potential causes, No need to recomend treatment.", image])
-    diagnosis_report = response.text if response else "No response received."
-    scan_memory.append({"Analysis":"The Analysis of the Image", "diagnosis": diagnosis_report})
-    print(diagnosis_report)
-    return {"diagnosis": diagnosis_report}
+            diagnosis_report = response.text if response else "No response received."
+            print(diagnosis_report)
+            return {"result":diagnosis_report}
+    else:
+        print(f"Image for appointment {details.appointmentId} not found.")
+        return None
+    image = PIL.Image.open(io.BytesIO(image_bytes))
+    return {"message": "Scan successful", "data": details}
 
 # Query past diagnoses
 from langchain_community.chat_message_histories import ChatMessageHistory
