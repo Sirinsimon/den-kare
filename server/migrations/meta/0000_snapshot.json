@@ -1,5 +1,5 @@
 {
-  "id": "254ac4d0-9512-4914-a1ee-a85bbba6d389",
+  "id": "7689192d-8360-4767-afcd-a7272a6bfb0f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -22,6 +22,12 @@
         },
         "clinicId": {
           "name": "clinicId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "doctorId": {
+          "name": "doctorId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -74,6 +80,19 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "appointment_doctorId_doctors_id_fk": {
+          "name": "appointment_doctorId_doctors_id_fk",
+          "tableFrom": "appointment",
+          "tableTo": "doctors",
+          "columnsFrom": [
+            "doctorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -103,6 +122,52 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.detections": {
+      "name": "detections",
+      "schema": "",
+      "columns": {
+        "appointment_id": {
+          "name": "appointment_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "clinic_id": {
+          "name": "clinic_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "detected": {
+          "name": "detected",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'"
+        },
+        "past_history": {
+          "name": "past_history",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},

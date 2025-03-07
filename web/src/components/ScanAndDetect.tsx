@@ -1,22 +1,40 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader, Upload, CheckCircle, ArrowRight } from "lucide-react";
+import { useLocation } from "react-router-dom";
+
+const saveDetectionToDB = async (appointment_id: string, clinicId: string, detected: string[], past_history?: string) => {
+
+    const payload = { appointment_id, clinicId, detected, past_history: past_history || '' };
+    try {
+        const response = await fetch("http://127.0.0.1:8000/analyze/detect", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to save detection");
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error saving detection:", error);
+        throw error;
+    }
+};
+
 
 const ScanAndDetect = ({ onComplete }: { onComplete: () => void }) => {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const appointmentId = queryParams.get("appointmentId");
+    const clinicId = queryParams.get("clinicId");
     const [image, setImage] = useState<File | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [isUploaded, setIsUploaded] = useState(false);
     const [imageSize, setImageSize] = useState<{ width: number, height: number }>({ width: 0, height: 0 });
     const [boxes, setBoxes] = useState<[number, number, number, number, string, number][]>([]);
-
-    const todoItems = [
-        { id: 1, text: "Image successfully uploaded", completed: true },
-        { id: 2, text: "Initial scan complete", completed: true },
-        { id: 3, text: "Processing metadata", completed: true },
-        { id: 4, text: "Running diagnosis algorithms", completed: false },
-        { id: 5, text: "Preparing for review phase", completed: false },
-    ];
 
     const handleBrowseClick = () => {
         document.getElementById("fileInput")?.click();
@@ -50,6 +68,10 @@ const ScanAndDetect = ({ onComplete }: { onComplete: () => void }) => {
             });
             const result = await response.json();
             setBoxes(result.boxes || []);
+
+            if (result.boxes.length > 0) {
+                await saveDetectionToDB(appointmentId, clinicId, result.boxes.map(box => box[4]));
+            }
         } catch (error) {
             console.error("Error uploading image:", error);
         }
@@ -244,11 +266,11 @@ const ScanAndDetect = ({ onComplete }: { onComplete: () => void }) => {
                         <h3 className="text-lg font-medium mb-4 text-center">Findings</h3>
                         <div className="flex-1">
                             <ul className="space-y-3">
-                                {boxes.map(([x1, y1, x2, y2, label, confidence,completed], index) => (
+                                {boxes.map(([x1, y1, x2, y2, label, confidence, completed], index) => (
                                     <li key={index} className="flex items-center gap-3">
                                         <div className={`w-5 h-5 rounded-full flex items-center justify-center bg-neutral-800 text-neutral-600
-                                            ${!completed ?"bg-progress-25/20 text-progress-25" : "bg-neutral-800 text-neutral-600"}` }>
-                                                {!completed && <CheckCircle size={14} />}
+                                            ${!completed ? "bg-progress-25/20 text-progress-25" : "bg-neutral-800 text-neutral-600"}`}>
+                                            {!completed && <CheckCircle size={14} />}
                                         </div>
                                         <span className="text-white">
                                             {label} - {confidence}

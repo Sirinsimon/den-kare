@@ -1,11 +1,13 @@
 import { text, pgTable, uuid, timestamp, date } from 'drizzle-orm/pg-core';
 import { patientTable } from './patient.schema';
 import { clinicTable } from './clinic.schema';
+import { doctorTable } from './doctor.schema';
 
 export const appointmentTable= pgTable('appointment', {
     id: uuid('id').primaryKey(),
     patientId: uuid('patient_id').notNull().references(() => patientTable.id),
     clinicId: uuid('clinicId').notNull().references(() => clinicTable.id),
+    doctorId: uuid('doctorId').notNull().references(() => doctorTable.id),
     time: text('time').notNull(), 
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),

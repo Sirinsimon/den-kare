@@ -15,7 +15,7 @@ const app: Application = express();
 const clienturl =
     (process.env.NODE_ENV === 'production'
         ? process.env.CLIENT_PROD_URL
-        : process.env.CLIENT_DEV_URL) ?? 'http://localhost:5173';
+        : process.env.CLIENT_DEV_URL) ?? 'http://localhost:8080';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

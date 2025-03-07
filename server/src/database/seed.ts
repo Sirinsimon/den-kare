@@ -57,6 +57,7 @@ async function seed() {
         {
             id: uuidv4(),
             patientId: patients[0].id,
+            doctorId:doctors[0].id,
             clinicId: clinics[0].id,
             time: '10:30 AM',
             createdAt: new Date(),
@@ -66,6 +67,7 @@ async function seed() {
             id: uuidv4(),
             patientId: patients[1].id,
             clinicId: clinics[1].id,
+            doctorId:doctors[1].id,
             time: '02:00 PM',
             createdAt: new Date(),
             updatedAt: new Date()

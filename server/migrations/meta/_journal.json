@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1741273585071,
-      "tag": "0000_big_the_anarchist",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1741278971902,
-      "tag": "0001_slimy_big_bertha",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1741280729435,
-      "tag": "0002_lumpy_sugar_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1741280915501,
-      "tag": "0003_watery_lily_hollister",
+      "when": 1741291920944,
+      "tag": "0000_furry_colonel_america",
       "breakpoints": true
     }
   ]

@@ -3,8 +3,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, MessageSquare, ClipboardList, Send } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
-const ReviewAndAnnotate = ({ onComplete, onBack }: { onComplete: () => void; onBack: () => void }) => {
+const ReviewAndAnnotate = ({ onComplete, onBack, }: { onComplete: () => void; onBack: () => void }) => {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const appointmentId = queryParams.get("appointmentId");
+
+    console.log(appointmentId)
     const [chatMessages, setChatMessages] = useState<{ text: string, sender: 'user' | 'system' }[]>([
         { text: "Welcome! Let's review and annotate the documents. What do you notice about the images?", sender: "system" }
     ]);
@@ -35,9 +41,25 @@ const ReviewAndAnnotate = ({ onComplete, onBack }: { onComplete: () => void; onB
             }
         }
     };
+    const savePastHistory = async () => {
+        let data = await fetch("http://localhost:8000/analyze/past_history", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                past_history: newNote,
+                appointment_id: appointmentId,
+            })
+        })
+        let res = await data.json()
+        console.log(res)
+    }
 
-    const handleAddNote = () => {
+    const handleAddNote = async() => {
         if (newNote.trim()) {
+            await savePastHistory()
             setNotes([...notes, newNote]);
             setNewNote("");
         }
@@ -80,8 +102,8 @@ const ReviewAndAnnotate = ({ onComplete, onBack }: { onComplete: () => void; onB
                             <div
                                 key={idx}
                                 className={`p-3 rounded-lg ${msg.sender === 'user'
-                                        ? 'bg-progress-50/20 text-white ml-8'
-                                        : 'bg-black/40 text-neutral-300 mr-8 border border-neutral-800'
+                                    ? 'bg-progress-50/20 text-white ml-8'
+                                    : 'bg-black/40 text-neutral-300 mr-8 border border-neutral-800'
                                     }`}
                             >
                                 {msg.text}
