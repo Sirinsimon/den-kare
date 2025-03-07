@@ -9,7 +9,7 @@ export default function AppointmentsCard({ appointments }: AppointmentsCardProps
   const navigate = useNavigate();
 
   const handleRowClick = (appointmentId: number,clinicId:string) => {
-    navigate(`/?appointmentId=${appointmentId}&clinicId=${clinicId}`);
+    navigate(`/analyze/?appointmentId=${appointmentId}&clinicId=${clinicId}`);
   };
 
   return (
